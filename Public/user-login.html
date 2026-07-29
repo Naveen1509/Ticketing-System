@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Login - IT Ticket System</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(to right, #0f766e, #14b8a6);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+        }
+
+        .card {
+            background: white;
+            padding: 34px;
+            border-radius: 10px;
+            width: min(380px, 92vw);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+        }
+
+        h2 {
+            margin-top: 0;
+            margin-bottom: 16px;
+            text-align: center;
+        }
+
+        input {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 12px;
+            box-sizing: border-box;
+        }
+
+        button {
+            width: 100%;
+            padding: 10px;
+            background: #0f766e;
+            color: white;
+            border: none;
+            cursor: pointer;
+            border-radius: 6px;
+        }
+
+        .back {
+            display: block;
+            margin-top: 12px;
+            text-align: center;
+            color: #334155;
+            text-decoration: none;
+        }
+
+        #error {
+            color: #b91c1c;
+            text-align: center;
+            min-height: 18px;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <h2>User Login</h2>
+        <input id="username" placeholder="Username">
+        <input id="password" type="password" placeholder="Password">
+        <button id="loginBtn" type="button">Login as User</button>
+        <p id="error"></p>
+        <a class="back" href="/login.html">Back</a>
+    </div>
+
+    <script>
+        function normalizeRole(value) {
+            return String(value || "").trim().toLowerCase();
+        }
+
+        async function loginUser() {
+            const username = document.getElementById("username").value.trim();
+            const password = document.getElementById("password").value;
+            const error = document.getElementById("error");
+            error.textContent = "";
+
+            if (!username || !password) {
+                error.textContent = "Please enter username and password";
+                return;
+            }
+
+            try {
+                const res = await fetch("/login", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ username, password })
+                });
+
+                const data = await res.json().catch(() => ({}));
+                if (!res.ok) {
+                    error.textContent = data.error || "Invalid credentials";
+                    return;
+                }
+
+                const sessionUser = {
+                    id: Number(data.id || data.user_id || data.userId || 0),
+                    username: String(data.username || ""),
+                    role: normalizeRole(data.role)
+                };
+
+                if (sessionUser.role === "admin") {
+                    error.textContent = "Use Admin Login for admin account";
+                    return;
+                }
+
+                localStorage.setItem("user", JSON.stringify(sessionUser));
+                window.location.replace("/user.html");
+            } catch (_) {
+                error.textContent = "Unable to login right now";
+            }
+        }
+
+        document.getElementById("loginBtn").addEventListener("click", loginUser);
+        document.getElementById("password").addEventListener("keydown", (event) => {
+            if (event.key === "Enter") {
+                loginUser();
+            }
+        });
+    </script>
+</body>
+</html>

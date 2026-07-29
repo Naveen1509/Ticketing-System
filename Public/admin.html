@@ -1,0 +1,1619 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            background-color: #f4f6f9;
+            background-image:
+                linear-gradient(135deg, rgba(30, 64, 175, 0.18), rgba(14, 116, 144, 0.16)),
+                linear-gradient(rgba(244, 246, 249, 0.76), rgba(244, 246, 249, 0.76)),
+                url("/assets/ticket-raise-bg.svg");
+            background-position: center;
+            background-size: cover;
+            background-attachment: fixed;
+        }
+
+        header {
+            background: #667eea;
+            color: white;
+            padding: 15px;
+            text-align: center;
+            font-size: 20px;
+            position: relative;
+        }
+
+        .header-profile {
+            position: absolute;
+            left: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        .header-avatar {
+            width: 30px;
+            height: 30px;
+            border-radius: 999px;
+            background: #22c55e;
+            color: #052e16;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            border: 1px solid rgba(255,255,255,0.45);
+        }
+
+        .header-center {
+            display: inline-flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            line-height: 1.1;
+            gap: 2px;
+        }
+
+        .header-brand-title {
+            font-size: 38px;
+            font-weight: 800;
+            color: #f8fbff;
+            letter-spacing: 0.2px;
+        }
+
+        .header-page-label {
+            font-size: 19px;
+            font-weight: 700;
+            color: #eaf2ff;
+        }
+
+        .header-logout {
+            position: absolute;
+            right: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: #e2e8f0;
+            color: #111827;
+            border: none;
+            border-radius: 6px;
+            padding: 7px 12px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .container {
+            padding: 20px;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        @media (min-width: 1201px) {
+            .container {
+                max-width: calc(100vw - 420px);
+                margin-right: 370px;
+            }
+        }
+
+        .top-actions {
+            display: flex;
+            justify-content: flex-start;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 12px;
+        }
+
+        .stats {
+            background: white;
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+            box-shadow: 0 3px 8px rgba(0,0,0,0.1);
+            display: grid;
+            grid-template-columns: repeat(4, minmax(120px, 1fr));
+            gap: 10px;
+        }
+
+        .stat {
+            background: #eaf3ff;
+            border: 1px solid #cfe3ff;
+            border-radius: 8px;
+            padding: 10px;
+            text-align: center;
+            color: #0f172a;
+        }
+
+        .filter-card {
+            background: white;
+            border: 1px solid #cfe3ff;
+            border-radius: 8px;
+            padding: 12px;
+            margin-bottom: 14px;
+            box-shadow: 0 3px 8px rgba(0,0,0,0.06);
+        }
+
+        .filter-grid {
+            display: grid;
+            grid-template-columns: 1.3fr 0.9fr 1.4fr auto;
+            gap: 8px;
+            align-items: end;
+        }
+
+        .filter-grid input,
+        .filter-grid select {
+            width: 100%;
+            box-sizing: border-box;
+            padding: 9px;
+            border: 1px solid #cbd5e1;
+            border-radius: 6px;
+        }
+
+        .filter-grid label {
+            display: block;
+            margin-bottom: 6px;
+            font-size: 12px;
+            color: #475569;
+        }
+
+        .clear-filter-btn {
+            background: #334155;
+            color: white;
+            height: 38px;
+            margin: 0;
+        }
+
+        .ticket-card {
+            position: relative;
+            background: white;
+            border: 2px solid #93c5fd;
+            padding: 15px;
+            padding-right: 170px;
+            margin-bottom: 15px;
+            border-radius: 8px;
+            box-shadow: 0 3px 8px rgba(0,0,0,0.1);
+        }
+
+
+        .date-time-box {
+            position: absolute;
+            right: 12px;
+            top: 12px;
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 8px 10px;
+            min-width: 130px;
+            font-size: 12px;
+            line-height: 1.4;
+            color: #334155;
+        }
+
+        textarea {
+            width: 100%;
+            padding: 8px;
+            margin-top: 10px;
+            box-sizing: border-box;
+        }
+
+        button {
+            padding: 6px 12px;
+            margin-top: 8px;
+            margin-right: 5px;
+            border: none;
+            cursor: pointer;
+            border-radius: 4px;
+        }
+
+        .status-btn {
+            color: #fff;
+            border: 1px solid transparent;
+            transition: filter 0.15s ease, transform 0.05s ease;
+        }
+
+        .status-btn:hover {
+            filter: brightness(0.96);
+        }
+
+        .status-btn:active {
+            transform: translateY(1px);
+        }
+
+        .status-none {
+            background: #64748b;
+            border-color: #475569;
+        }
+
+        .status-open {
+            background: #15803d;
+            border-color: #166534;
+        }
+
+        .status-progress {
+            background: #c2410c;
+            border-color: #9a3412;
+        }
+
+        .status-closed {
+            background: #b91c1c;
+            border-color: #991b1b;
+        }
+
+        .status-pill {
+            display: inline-block;
+            padding: 2px 10px;
+            border-radius: 999px;
+            font-size: 12px;
+            font-weight: 700;
+            letter-spacing: 0.2px;
+            color: #fff;
+            vertical-align: middle;
+            margin-left: 4px;
+        }
+        .comment-btn { background: #28a745; color: white; }
+        .logout-btn { background: #e2e8f0; color: #111827; float: right; }
+
+        .toast-wrap {
+            position: fixed;
+            top: 16px;
+            right: 16px;
+            z-index: 9999;
+        }
+
+        .toast {
+            min-width: 260px;
+            padding: 12px 14px;
+            border-radius: 8px;
+            color: #fff;
+            margin-bottom: 10px;
+            box-shadow: 0 8px 18px rgba(0,0,0,0.2);
+            font-size: 14px;
+            background: #2563eb;
+        }
+
+        .notif-bar {
+            background: #fff7ed;
+            border: 1px solid #fed7aa;
+            border-radius: 8px;
+            padding: 12px;
+            margin-bottom: 16px;
+        }
+
+        .notif-title {
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .notif-count {
+            color: #9a3412;
+            font-weight: 700;
+        }
+
+        .notif-list {
+            margin: 0;
+            padding-left: 18px;
+            color: #7c2d12;
+        }
+
+        .create-user {
+            background: white;
+            border: 2px solid #93c5fd;
+            border-radius: 8px;
+            padding: 16px;
+            margin-bottom: 16px;
+            box-shadow: 0 3px 8px rgba(0,0,0,0.1);
+        }
+
+        .create-user h3 {
+            margin: 0 0 12px 0;
+        }
+
+        .create-user-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr auto;
+            gap: 10px;
+            align-items: end;
+        }
+
+        .create-user input,
+        .create-user select {
+            width: 100%;
+            box-sizing: border-box;
+            padding: 10px;
+            border-radius: 6px;
+            border: 1px solid #cbd5e1;
+        }
+
+        .create-user label {
+            display: block;
+            margin-bottom: 6px;
+            font-size: 13px;
+            color: #334155;
+        }
+
+        .create-btn {
+            background: #0f766e;
+            color: white;
+            height: 40px;
+            padding: 0 14px;
+        }
+
+        .menu-wrap {
+            position: relative;
+        }
+
+        .menu-btn {
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            border: none;
+            background: #e2e8f0;
+            color: #0f172a;
+            font-size: 20px;
+            line-height: 1;
+            cursor: pointer;
+        }
+
+        .menu-list {
+            position: absolute;
+            left: 0;
+            top: 44px;
+            background: white;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            min-width: 150px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.12);
+            display: none;
+            z-index: 50;
+        }
+
+        .menu-list.show {
+            display: block;
+        }
+
+        .menu-item {
+            width: 100%;
+            text-align: left;
+            background: white;
+            color: #0f172a;
+            border: none;
+            padding: 10px 12px;
+            border-radius: 0;
+            margin: 0;
+        }
+
+        .menu-item:hover {
+            background: #f8fafc;
+        }
+
+        .tool-panel {
+            background: white;
+            border-radius: 8px;
+            padding: 16px;
+            margin-bottom: 16px;
+            box-shadow: 0 3px 8px rgba(0,0,0,0.1);
+            display: none;
+        }
+
+        .tool-panel.show {
+            display: block;
+        }
+
+        .tool-panel h3 {
+            margin-top: 0;
+        }
+
+        .panel-top {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 10px;
+        }
+
+        .panel-top h3 {
+            margin: 0;
+        }
+
+        .panel-back-btn {
+            margin: 0;
+            background: #e2e8f0;
+            color: #111827;
+            border: 1px solid #cbd5e1;
+            border-radius: 6px;
+            padding: 6px 10px;
+            line-height: 1;
+            cursor: pointer;
+        }
+
+        .history-item {
+            border-left: 3px solid #94a3b8;
+            padding: 8px 10px;
+            margin-bottom: 8px;
+            background: #f8fafc;
+            border-radius: 6px;
+        }
+
+        .history-actions {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 10px;
+        }
+
+        .history-btn {
+            background: #0f766e;
+            color: white;
+            margin: 0;
+        }
+
+        .history-btn.clear {
+            background: #b91c1c;
+        }
+
+        .history-meta {
+            font-size: 12px;
+            color: #475569;
+        }
+
+        .settings-grid {
+            display: grid;
+            grid-template-columns: 1fr 220px;
+            gap: 10px;
+            align-items: center;
+            max-width: 720px;
+        }
+
+        .settings-grid input {
+            width: 100%;
+            box-sizing: border-box;
+            padding: 8px;
+            border: 1px solid #cbd5e1;
+            border-radius: 6px;
+        }
+
+        .storage-list p {
+            margin: 6px 0;
+        }
+
+        .time-grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(160px, 1fr));
+            gap: 10px;
+            margin-top: 8px;
+            margin-bottom: 8px;
+        }
+
+        .time-grid label {
+            display: block;
+            font-size: 12px;
+            color: #475569;
+            margin-bottom: 4px;
+        }
+
+        .time-grid input {
+            width: 100%;
+            box-sizing: border-box;
+            padding: 8px;
+            border: 1px solid #cbd5e1;
+            border-radius: 6px;
+        }
+
+        .duration-text {
+            font-size: 13px;
+            color: #0f172a;
+            margin-top: 4px;
+            margin-bottom: 6px;
+        }
+
+        .ticket-image {
+            margin-top: 6px;
+            max-width: 280px;
+            max-height: 180px;
+            width: auto;
+            height: auto;
+            border: 1px solid #cbd5e1;
+            border-radius: 6px;
+            display: block;
+        }
+
+        .chat-panel {
+            position: fixed;
+            right: 14px;
+            top: 88px;
+            width: 340px;
+            height: calc(100vh - 106px);
+            background: #ffffff;
+            border: 1px solid #cbd5e1;
+            border-radius: 10px;
+            box-shadow: 0 10px 22px rgba(0,0,0,0.14);
+            display: grid;
+            grid-template-rows: auto auto 1fr auto;
+            overflow: hidden;
+            z-index: 30;
+        }
+
+        .chat-header {
+            background: #0f172a;
+            color: #fff;
+            padding: 10px 12px;
+            font-size: 14px;
+            font-weight: 700;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .chat-header-left {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            min-width: 0;
+        }
+
+        .chat-title {
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .chat-back-btn {
+            margin: 0;
+            padding: 0 8px;
+            height: 26px;
+            border: 1px solid rgba(255,255,255,0.25);
+            border-radius: 6px;
+            background: rgba(255,255,255,0.12);
+            color: #fff;
+            font-size: 14px;
+            line-height: 1;
+            display: none;
+        }
+
+        .chat-back-btn.show {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .chat-unread {
+            background: #dc2626;
+            color: #fff;
+            border-radius: 999px;
+            font-size: 11px;
+            padding: 2px 8px;
+        }
+
+        .chat-users {
+            border-bottom: 1px solid #e2e8f0;
+            max-height: 140px;
+            overflow: auto;
+            background: #f8fafc;
+            padding: 8px;
+        }
+
+        .chat-user-btn {
+            width: 100%;
+            text-align: left;
+            margin: 0 0 6px 0;
+            background: #fff;
+            color: #0f172a;
+            border: 1px solid #cbd5e1;
+            border-radius: 6px;
+            padding: 8px;
+            cursor: pointer;
+        }
+
+        .chat-user-btn.active {
+            border-color: #2563eb;
+            background: #dbeafe;
+        }
+
+        .chat-user-meta {
+            font-size: 11px;
+            color: #475569;
+            margin-top: 4px;
+        }
+
+        .chat-messages {
+            overflow: auto;
+            padding: 10px;
+            background: #fff;
+        }
+
+        .chat-msg {
+            max-width: 82%;
+            padding: 8px 10px;
+            border-radius: 8px;
+            font-size: 13px;
+            margin-bottom: 8px;
+            line-height: 1.35;
+            word-break: break-word;
+        }
+
+        .chat-msg.me {
+            margin-left: auto;
+            background: #dbeafe;
+            color: #0f172a;
+            border: 1px solid #bfdbfe;
+        }
+
+        .chat-msg.other {
+            margin-right: auto;
+            background: #f1f5f9;
+            color: #111827;
+            border: 1px solid #e2e8f0;
+        }
+
+        .chat-time {
+            font-size: 10px;
+            color: #64748b;
+            margin-top: 4px;
+        }
+
+        .chat-compose {
+            border-top: 1px solid #e2e8f0;
+            padding: 8px;
+            display: grid;
+            grid-template-columns: 1fr auto;
+            gap: 6px;
+            background: #fff;
+        }
+
+        .chat-compose input {
+            width: 100%;
+            box-sizing: border-box;
+            border: 1px solid #cbd5e1;
+            border-radius: 6px;
+            padding: 8px;
+            margin: 0;
+        }
+
+        .chat-send-btn {
+            margin: 0;
+            background: #2563eb;
+            color: #fff;
+        }
+
+        @media (max-width: 1200px) {
+            .chat-panel {
+                position: static;
+                width: 100%;
+                height: 420px;
+                margin-top: 12px;
+            }
+
+            .container {
+                max-width: 1000px;
+                margin-right: auto;
+            }
+        }
+    </style>
+</head>
+<body>
+<header>
+    <div class="header-profile">
+        <span id="headerAvatar" class="header-avatar">A</span>
+        <span id="headerUserName">Admin</span>
+    </div>
+    <div class="header-center">
+        <div class="header-brand-title">Zealous Studio - IT Ticket System</div>
+        <div class="header-page-label">Admin Dashboard</div>
+    </div>
+    <button class="header-logout" id="logoutBtn" type="button">Logout</button>
+</header>
+
+<div class="container">
+    <div class="top-actions">
+        <div class="menu-wrap">
+            <button id="menuBtn" class="menu-btn" type="button" title="Admin Tools">...</button>
+            <div id="menuList" class="menu-list">
+                <button class="menu-item" data-panel="historyPanel" type="button">History</button>
+                <button class="menu-item" data-panel="settingsPanel" type="button">Settings</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="historyPanel" class="tool-panel">
+        <div class="panel-top">
+            <button id="historyBackBtn" class="panel-back-btn" type="button" title="Back">&#8592;</button>
+            <h3>Complaint History</h3>
+        </div>
+        <div class="history-actions">
+            <button id="backupHistoryBtn" class="history-btn" type="button">Backup History</button>
+            <button id="clearHistoryBtn" class="history-btn clear" type="button">Clear History</button>
+        </div>
+        <p id="historyStatus"></p>
+        <div id="historyContainer"></div>
+    </div>
+
+    <div id="settingsPanel" class="tool-panel">
+        <div class="panel-top">
+            <button id="settingsBackBtn" class="panel-back-btn" type="button" title="Back">&#8592;</button>
+            <h3>Settings</h3>
+        </div>
+        <div class="settings-grid">
+            <label for="pollSecondsInput">Refresh Interval (seconds)</label>
+            <input id="pollSecondsInput" type="number" min="3" max="60" value="5">
+            <label for="backupDirInput">Storage Location</label>
+            <input id="backupDirInput" type="text" placeholder="D:\\IT\\ticket-system\\backups">
+        </div>
+        <div id="storageContainer" class="storage-list"></div>
+        <button id="saveSettingsBtn" class="create-btn" type="button">Save Settings</button>
+    </div>
+
+    <div class="notif-bar">
+        <div class="notif-title">New Complaint Notifications: <span id="notifCount" class="notif-count">0</span></div>
+        <ul id="notifList" class="notif-list"></ul>
+    </div>
+
+    <div class="create-user">
+        <h3>Create New User</h3>
+        <div class="create-user-grid">
+            <div>
+                <label for="newUsername">Username</label>
+                <input id="newUsername" type="text" placeholder="Enter username">
+            </div>
+            <div>
+                <label for="newPassword">Password</label>
+                <input id="newPassword" type="password" placeholder="Enter password">
+            </div>
+            <div>
+                <label for="newUserRole">Role</label>
+                <select id="newUserRole">
+                    <option value="employee">Employee</option>
+                    <option value="team lead">Team Lead</option>
+                    <option value="supervisor">Supervisor</option>
+                    <option value="admin">Admin</option>
+                </select>
+            </div>
+            <button id="createUserBtn" class="create-btn" type="button">Create User</button>
+        </div>
+    </div>
+
+    <div class="stats">
+        <div class="stat">Total<br><b id="total">0</b></div>
+        <div class="stat">Open<br><b id="open">0</b></div>
+        <div class="stat">In Progress<br><b id="progress">0</b></div>
+        <div class="stat">Closed<br><b id="closed">0</b></div>
+    </div>
+
+    <div class="filter-card">
+        <div class="filter-grid">
+            <div>
+                <label for="adminSearch">Search</label>
+                <input id="adminSearch" type="text" placeholder="Search title, description, comment">
+            </div>
+            <div>
+                <label for="adminFilterType">Filter By</label>
+                <select id="adminFilterType">
+                    <option value="date">By Date</option>
+                    <option value="name">By Name</option>
+                    <option value="complaint">By Complaint</option>
+                </select>
+            </div>
+            <div>
+                <label for="adminFilterValue">Filter Value</label>
+                <input id="adminFilterValue" type="date">
+            </div>
+            <button id="clearAdminFiltersBtn" class="clear-filter-btn" type="button">Clear</button>
+        </div>
+    </div>
+
+    <div id="tickets"></div>
+</div>
+<div id="toastWrap" class="toast-wrap"></div>
+<div id="adminChatPanel" class="chat-panel">
+    <div class="chat-header">
+        <div class="chat-header-left">
+            <button id="adminChatBackBtn" class="chat-back-btn" type="button" title="Back to all chats">&#8592;</button>
+            <span id="adminChatTitle" class="chat-title">Admin Chat</span>
+        </div>
+        <span id="adminChatUnread" class="chat-unread">0</span>
+    </div>
+    <div id="adminChatUsers" class="chat-users"></div>
+    <div id="adminChatMessages" class="chat-messages"></div>
+    <div class="chat-compose">
+        <input id="adminChatInput" type="text" placeholder="Type message to selected user">
+        <button id="adminChatSendBtn" class="chat-send-btn" type="button">Send</button>
+    </div>
+</div>
+
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+    function normalizeRole(value) {
+        return String(value || "").trim().toLowerCase();
+    }
+
+    /**
+     * @param {string} id
+     * @returns {HTMLElement}
+     */
+    function mustGet(id) {
+        const el = document.getElementById(id);
+        if (!el) {
+            throw new Error(`Missing element: ${id}`);
+        }
+        return el;
+    }
+
+    let user = null;
+    try {
+        user = JSON.parse(localStorage.getItem("user") || "null");
+    } catch (_) {
+        user = null;
+    }
+
+    const sessionRole = normalizeRole(user && user.role);
+    const sessionUserId = Number((user && (user.id || user.user_id || user.userId)) || 0);
+
+    if (!user || sessionRole !== "admin" || !Number.isFinite(sessionUserId) || sessionUserId <= 0) {
+        localStorage.removeItem("user");
+        alert("Access denied");
+        location.href = "/login.html";
+        return;
+    }
+
+    const logoutBtn = /** @type {HTMLButtonElement} */ (mustGet("logoutBtn"));
+    const headerAvatar = mustGet("headerAvatar");
+    const headerUserName = mustGet("headerUserName");
+    const menuBtn = /** @type {HTMLButtonElement} */ (mustGet("menuBtn"));
+    const menuList = mustGet("menuList");
+    const notifList = /** @type {HTMLUListElement} */ (mustGet("notifList"));
+    const notifCount = mustGet("notifCount");
+    const ticketsContainer = mustGet("tickets");
+    const toastWrap = mustGet("toastWrap");
+    const historyPanel = mustGet("historyPanel");
+    const settingsPanel = mustGet("settingsPanel");
+    const historyBackBtn = /** @type {HTMLButtonElement} */ (mustGet("historyBackBtn"));
+    const settingsBackBtn = /** @type {HTMLButtonElement} */ (mustGet("settingsBackBtn"));
+    const historyContainer = mustGet("historyContainer");
+    const historyStatus = mustGet("historyStatus");
+    const backupHistoryBtn = /** @type {HTMLButtonElement} */ (mustGet("backupHistoryBtn"));
+    const clearHistoryBtn = /** @type {HTMLButtonElement} */ (mustGet("clearHistoryBtn"));
+    const storageContainer = mustGet("storageContainer");
+    const pollSecondsInput = /** @type {HTMLInputElement} */ (mustGet("pollSecondsInput"));
+    const backupDirInput = /** @type {HTMLInputElement} */ (mustGet("backupDirInput"));
+    const saveSettingsBtn = /** @type {HTMLButtonElement} */ (mustGet("saveSettingsBtn"));
+    const createUserBtn = /** @type {HTMLButtonElement} */ (mustGet("createUserBtn"));
+    const newUsernameInput = /** @type {HTMLInputElement} */ (mustGet("newUsername"));
+    const newPasswordInput = /** @type {HTMLInputElement} */ (mustGet("newPassword"));
+    const newUserRoleInput = /** @type {HTMLSelectElement} */ (mustGet("newUserRole"));
+    const totalEl = mustGet("total");
+    const openEl = mustGet("open");
+    const progressEl = mustGet("progress");
+    const closedEl = mustGet("closed");
+    const adminSearchInput = /** @type {HTMLInputElement} */ (mustGet("adminSearch"));
+    const adminFilterTypeInput = /** @type {HTMLSelectElement} */ (mustGet("adminFilterType"));
+    const adminFilterValueInput = /** @type {HTMLInputElement} */ (mustGet("adminFilterValue"));
+    const clearAdminFiltersBtn = /** @type {HTMLButtonElement} */ (mustGet("clearAdminFiltersBtn"));
+    const adminChatUnread = mustGet("adminChatUnread");
+    const adminChatTitle = mustGet("adminChatTitle");
+    const adminChatBackBtn = /** @type {HTMLButtonElement} */ (mustGet("adminChatBackBtn"));
+    const adminChatUsers = mustGet("adminChatUsers");
+    const adminChatMessages = mustGet("adminChatMessages");
+    const adminChatInput = /** @type {HTMLInputElement} */ (mustGet("adminChatInput"));
+    const adminChatSendBtn = /** @type {HTMLButtonElement} */ (mustGet("adminChatSendBtn"));
+
+    let knownTicketIds = new Set();
+    let allTickets = [];
+    let chatUsersData = [];
+    let selectedChatUserId = 0;
+    let chatPollTimer = null;
+    let chatFirstLoad = true;
+    let knownChatUnreadCount = 0;
+    let lastAdminIncomingMessageId = 0;
+    let firstLoadComplete = false;
+    let unreadCount = 0;
+    let pollSeconds = Number(localStorage.getItem("admin_poll_seconds") || "5");
+    if (!Number.isFinite(pollSeconds) || pollSeconds < 3 || pollSeconds > 60) {
+        pollSeconds = 5;
+    }
+    pollSecondsInput.value = String(pollSeconds);
+    let pollTimer = null;
+    const backupDirKey = `admin_history_backup_dir_${sessionUserId}`;
+    let lastBackupDir = localStorage.getItem(backupDirKey) || "";
+    if (!lastBackupDir) {
+        lastBackupDir = "d:\\IT\\ticket-system\\backups";
+    }
+    backupDirInput.value = lastBackupDir;
+    headerUserName.textContent = `${user.username || "Admin"} (${sessionRole})`;
+    headerAvatar.textContent = String((user.username || "A").trim().charAt(0) || "A").toUpperCase();
+
+    logoutBtn.addEventListener("click", () => {
+        localStorage.removeItem("user");
+        location.href = "/login.html";
+    });
+
+    function closePanels() {
+        historyPanel.classList.remove("show");
+        settingsPanel.classList.remove("show");
+    }
+
+    async function openPanel(panelId) {
+        closePanels();
+        const target = document.getElementById(panelId);
+        if (!target) return;
+        target.classList.add("show");
+
+        if (panelId === "historyPanel") {
+            await loadHistory();
+        } else if (panelId === "settingsPanel") {
+            await loadStorage();
+        }
+    }
+
+    menuBtn.addEventListener("click", () => {
+        menuList.classList.toggle("show");
+    });
+
+    document.addEventListener("click", (event) => {
+        const target = /** @type {HTMLElement} */ (event.target);
+        if (!target.closest(".menu-wrap")) {
+            menuList.classList.remove("show");
+        }
+    });
+
+    menuList.querySelectorAll(".menu-item").forEach((btn) => {
+        btn.addEventListener("click", async () => {
+            const panelId = btn.getAttribute("data-panel");
+            menuList.classList.remove("show");
+            if (panelId) {
+                await openPanel(panelId);
+            }
+        });
+    });
+    historyBackBtn.addEventListener("click", closePanels);
+    settingsBackBtn.addEventListener("click", closePanels);
+
+    /**
+     * @param {string} message
+     */
+    function pushNotification(message) {
+        unreadCount += 1;
+        notifCount.textContent = String(unreadCount);
+        const item = document.createElement("li");
+        item.textContent = message;
+        notifList.prepend(item);
+    }
+
+    /**
+     * @param {string} message
+     */
+    function showToast(message) {
+        const toast = document.createElement("div");
+        toast.className = "toast";
+        toast.textContent = message;
+        toastWrap.appendChild(toast);
+        setTimeout(() => toast.remove(), 3500);
+    }
+
+    function escapeHtml(value) {
+        return String(value || "")
+            .replace(/&/g, "&amp;")
+            .replace(/</g, "&lt;")
+            .replace(/>/g, "&gt;")
+            .replace(/"/g, "&quot;")
+            .replace(/'/g, "&#39;");
+    }
+
+    function updateAdminChatHeader() {
+        if (!selectedChatUserId) {
+            adminChatTitle.textContent = "Admin Chat";
+            adminChatBackBtn.classList.remove("show");
+            return;
+        }
+        const selected = chatUsersData.find((u) => Number(u.id) === Number(selectedChatUserId));
+        const name = selected ? selected.username : `User ${selectedChatUserId}`;
+        adminChatTitle.textContent = `Chat: ${name}`;
+        adminChatBackBtn.classList.add("show");
+    }
+
+    function renderAdminChatUsers() {
+        if (!chatUsersData.length) {
+            adminChatUsers.innerHTML = "<div class=\"chat-user-meta\">No users available</div>";
+            updateAdminChatHeader();
+            return;
+        }
+
+        adminChatUsers.innerHTML = "";
+        chatUsersData.forEach((u) => {
+            const btn = document.createElement("button");
+            const activeClass = Number(u.id) === Number(selectedChatUserId) ? " active" : "";
+            btn.className = `chat-user-btn${activeClass}`;
+            btn.type = "button";
+            const unreadText = Number(u.unreadCount || 0) > 0 ? ` | Unread: ${Number(u.unreadCount)}` : "";
+            btn.innerHTML = `
+                <div><b>${escapeHtml(u.username)}</b> (${escapeHtml(u.role)})</div>
+                <div class="chat-user-meta">${escapeHtml(u.lastMessage || "No messages yet")}${unreadText}</div>
+            `;
+            btn.addEventListener("click", async () => {
+                selectedChatUserId = Number(u.id);
+                renderAdminChatUsers();
+                await loadAdminChatMessages(true);
+                await loadAdminChatUsers(false);
+            });
+            adminChatUsers.appendChild(btn);
+        });
+        updateAdminChatHeader();
+    }
+
+    async function loadAdminChatUsers(showNewToast) {
+        try {
+            const res = await fetch(`/chat/users?role=admin&adminId=${encodeURIComponent(String(sessionUserId))}`);
+            if (!res.ok) return;
+            const payload = await res.json();
+            const rows = Array.isArray(payload) ? payload : [];
+            chatUsersData = rows;
+            const totalUnread = rows.reduce((sum, row) => sum + Number(row.unreadCount || 0), 0);
+            adminChatUnread.textContent = String(totalUnread);
+            if (showNewToast && totalUnread > knownChatUnreadCount) {
+                showToast("New chat message received");
+            }
+            knownChatUnreadCount = totalUnread;
+
+            if (rows.length > 0 && Number(selectedChatUserId) > 0 && !rows.some((r) => Number(r.id) === Number(selectedChatUserId))) {
+                selectedChatUserId = Number(rows[0].id);
+            }
+            renderAdminChatUsers();
+        } catch (_) {}
+    }
+
+    async function loadAdminChatMessages(scrollToEnd) {
+        if (!selectedChatUserId) {
+            adminChatMessages.innerHTML = "<div class=\"chat-user-meta\">Select a user to start chat</div>";
+            updateAdminChatHeader();
+            return;
+        }
+
+        try {
+            const res = await fetch(`/chat/messages?role=admin&userId=${encodeURIComponent(String(sessionUserId))}&withUserId=${encodeURIComponent(String(selectedChatUserId))}`);
+            if (!res.ok) return;
+            const rows = await res.json();
+            const messages = Array.isArray(rows) ? rows : [];
+            adminChatMessages.innerHTML = "";
+            let maxIncomingId = lastAdminIncomingMessageId;
+
+            messages.forEach((msg) => {
+                const isMe = String(msg.sender_role || "").toLowerCase() === "admin";
+                const messageId = Number(msg.id || 0);
+                if (!isMe && messageId > maxIncomingId) {
+                    maxIncomingId = messageId;
+                }
+                const item = document.createElement("div");
+                item.className = `chat-msg ${isMe ? "me" : "other"}`;
+                item.innerHTML = `
+                    <div>${escapeHtml(msg.message)}</div>
+                    <div class="chat-time">${formatDateTime(msg.createdAt)}</div>
+                `;
+                adminChatMessages.appendChild(item);
+            });
+
+            if (!chatFirstLoad && maxIncomingId > lastAdminIncomingMessageId) {
+                showToast("New message in chat");
+            }
+            lastAdminIncomingMessageId = maxIncomingId;
+            chatFirstLoad = false;
+
+            if (scrollToEnd) {
+                adminChatMessages.scrollTop = adminChatMessages.scrollHeight;
+            }
+            updateAdminChatHeader();
+        } catch (_) {}
+    }
+
+    async function sendAdminChatMessage() {
+        const text = adminChatInput.value.trim();
+        if (!selectedChatUserId) {
+            showToast("Select a user to chat");
+            return;
+        }
+        if (!text) return;
+
+        adminChatSendBtn.disabled = true;
+        try {
+            const res = await fetch("/chat/messages", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    role: "admin",
+                    adminId: sessionUserId,
+                    toUserId: selectedChatUserId,
+                    message: text,
+                }),
+            });
+            const data = await res.json().catch(() => ({}));
+            if (!res.ok) {
+                showToast(data.error || "Unable to send chat message");
+                return;
+            }
+            adminChatInput.value = "";
+            await loadAdminChatMessages(true);
+            await loadAdminChatUsers(false);
+        } catch (_) {
+            showToast("Unable to send chat message");
+        } finally {
+            adminChatSendBtn.disabled = false;
+        }
+    }
+
+    async function createUser() {
+        const username = newUsernameInput.value.trim();
+        const password = newPasswordInput.value.trim();
+        const userRole = newUserRoleInput.value.trim();
+        if (!username || !password) {
+            showToast("Username and password are required");
+            return;
+        }
+
+        createUserBtn.disabled = true;
+        createUserBtn.textContent = "Creating...";
+        try {
+            const res = await fetch("/admin/create-user", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ username, password, role: "admin", userRole })
+            });
+
+            const data = await res.json().catch(() => ({}));
+            if (!res.ok) {
+                showToast(data.error || "Unable to create user");
+                return;
+            }
+
+            showToast(`User created: ${data.username || username} (${data.role || userRole})`);
+            newUsernameInput.value = "";
+            newPasswordInput.value = "";
+            newUserRoleInput.value = "employee";
+        } catch (_) {
+            showToast("Unable to create user");
+        } finally {
+            createUserBtn.disabled = false;
+            createUserBtn.textContent = "Create User";
+        }
+    }
+
+    function formatDateTime(isoValue) {
+        if (!isoValue) return "-";
+        const d = new Date(isoValue);
+        if (Number.isNaN(d.getTime())) return String(isoValue);
+        return d.toLocaleString();
+    }
+
+    function normalizeStatusForUpdate(status) {
+        const key = String(status || "").trim().toLowerCase().replace(/\s+/g, " ");
+        if (key === "none") return "None";
+        if (key === "open") return "Open";
+        if (key === "in progress" || key === "inprocess" || key === "in process" || key === "inprogress") return "In Progress";
+        if (key === "re-open" || key === "reopen") return "Re-Open";
+        if (key === "closed") return "Closed";
+        return "None";
+    }
+
+    function statusClassName(status) {
+        const normalized = normalizeStatusForUpdate(status);
+        if (normalized === "Open" || normalized === "Re-Open") return "status-open";
+        if (normalized === "In Progress") return "status-progress";
+        if (normalized === "Closed") return "status-closed";
+        return "status-none";
+    }
+
+    function formatDuration(totalOpenSeconds, openedAtIso) {
+        let totalSeconds = Number(totalOpenSeconds || 0);
+        if (openedAtIso) {
+            const start = new Date(openedAtIso).getTime();
+            const now = Date.now();
+            if (!Number.isNaN(start) && now > start) {
+                totalSeconds += Math.floor((now - start) / 1000);
+            }
+        }
+        if (totalSeconds <= 0) return "-";
+
+        const totalMinutes = Math.floor(totalSeconds / 60);
+        const days = Math.floor(totalMinutes / 1440);
+        const hours = Math.floor((totalMinutes % 1440) / 60);
+        const minutes = totalMinutes % 60;
+        const seconds = totalSeconds % 60;
+        const runningTag = openedAtIso ? " (running)" : "";
+        return `${days}d ${hours}h ${minutes}m ${seconds}s${runningTag}`;
+    }
+
+    function localDateInputValue(isoValue) {
+        if (!isoValue) return "";
+        const d = new Date(isoValue);
+        if (Number.isNaN(d.getTime())) return "";
+        const y = d.getFullYear();
+        const m = String(d.getMonth() + 1).padStart(2, "0");
+        const day = String(d.getDate()).padStart(2, "0");
+        return `${y}-${m}-${day}`;
+    }
+
+    let durationTimer = null;
+    function startLiveDurationUpdates() {
+        if (durationTimer) {
+            clearInterval(durationTimer);
+        }
+
+        const tick = () => {
+            ticketsContainer.querySelectorAll(".duration-value").forEach((el) => {
+                const total = Number(el.getAttribute("data-total") || "0");
+                const open = el.getAttribute("data-open");
+                el.textContent = formatDuration(total, open);
+            });
+        };
+
+        tick();
+        durationTimer = setInterval(tick, 1000);
+    }
+
+    function renderTicketList(tickets) {
+        ticketsContainer.innerHTML = "";
+        tickets.forEach((t) => {
+            const dt = formatDateParts(t.createdAt);
+            const duration = formatDuration(t.totalOpenSeconds, t.openedAt);
+            const openForDuration = t.openedAt || "";
+            const totalForDuration = Number(t.totalOpenSeconds || 0);
+            const normalizedStatus = normalizeStatusForUpdate(t.status);
+            const statusClass = statusClassName(t.status);
+                const imageBlock = t.imageData
+                    ? `<img class="ticket-image" src="${t.imageData}" alt="Ticket attachment">`
+                    : "";
+                const card = document.createElement("div");
+                card.className = "ticket-card";
+                card.innerHTML = `
+                    <div class="date-time-box">
+                        <div><b>Date:</b> ${dt.date}</div>
+                        <div><b>Time:</b> ${dt.time}</div>
+                    <div><b>Open Time:</b> ${formatDateTime(t.openedAt)}</div>
+                    <div><b>Close Time:</b> ${formatDateTime(t.closedAt)}</div>
+                    <div><b>Duration:</b> <span class="duration-value" data-total="${totalForDuration}" data-open="${openForDuration}">${duration}</span></div>
+                </div>
+                <h3>${t.title}</h3>
+                <p><b>Complaint No:</b> ${t.complaintNo || String(t.id || "").padStart(5, "0")}</p>
+                <p><b>Raised By:</b> ${t.username || "Unknown User"}</p>
+                <p><b>User ID:</b> ${t.user_id}</p>
+                <p><b>Department:</b> ${t.department || "Others"}</p>
+                <p><b>Description:</b> ${t.description}</p>
+                ${imageBlock}
+                <p><b>Status:</b> <span class="status-pill ${statusClass}">${t.status}</span></p>
+                <p><b>Admin Comment:</b> ${t.comment || "None"}</p>
+                <textarea id="comment-${t.id}" placeholder="Add comment...">${t.comment || ""}</textarea>
+                <br>
+                <button class="comment-btn" data-id="${t.id}" data-status="${normalizedStatus}">Save Comment</button>
+                <br><br>
+                <button class="status-btn status-none" data-id="${t.id}" data-status="None">None</button>
+                <button class="status-btn status-open" data-id="${t.id}" data-status="Open">Open</button>
+                <button class="status-btn status-progress" data-id="${t.id}" data-status="In Progress">In Progress</button>
+                <button class="status-btn status-closed" data-id="${t.id}" data-status="Closed">Closed</button>
+            `;
+            ticketsContainer.appendChild(card);
+        });
+
+        startLiveDurationUpdates();
+
+        ticketsContainer.querySelectorAll(".status-btn").forEach((btn) => {
+            btn.addEventListener("click", async () => {
+                const id = btn.getAttribute("data-id");
+                const status = btn.getAttribute("data-status");
+                if (!id || !status) return;
+                const commentEl = /** @type {HTMLTextAreaElement|null} */ (document.getElementById(`comment-${id}`));
+                const comment = commentEl ? commentEl.value : "";
+                await adminUpdate(id, status, comment);
+            });
+        });
+
+        ticketsContainer.querySelectorAll(".comment-btn").forEach((btn) => {
+            btn.addEventListener("click", async () => {
+                const id = btn.getAttribute("data-id");
+                const status = btn.getAttribute("data-status");
+                if (!id || !status) return;
+                const commentEl = /** @type {HTMLTextAreaElement|null} */ (document.getElementById(`comment-${id}`));
+                const comment = commentEl ? commentEl.value : "";
+                await adminUpdate(id, status, comment);
+                showToast("Comment saved");
+            });
+        });
+    }
+
+    function applyAdminFilters() {
+        const searchText = adminSearchInput.value.trim().toLowerCase();
+        const filterType = adminFilterTypeInput.value;
+        const filterValue = adminFilterValueInput.value.trim().toLowerCase();
+
+        const filtered = allTickets.filter((t) => {
+            const joinedSearch = `${t.title || ""} ${t.description || ""} ${t.comment || ""}`.toLowerCase();
+            const matchesSearch = !searchText || joinedSearch.includes(searchText);
+            if (!filterValue) return matchesSearch;
+
+            if (filterType === "date") {
+                return matchesSearch && localDateInputValue(t.createdAt) === filterValue;
+            }
+            if (filterType === "name") {
+                return matchesSearch && String(t.username || "").toLowerCase().includes(filterValue);
+            }
+            if (filterType === "complaint") {
+                return matchesSearch && String(t.description || "").toLowerCase().includes(filterValue);
+            }
+            return matchesSearch;
+        });
+
+        renderTicketList(filtered);
+    }
+
+    function syncAdminFilterInputMode() {
+        const mode = adminFilterTypeInput.value;
+        if (mode === "date") {
+            adminFilterValueInput.type = "date";
+            adminFilterValueInput.placeholder = "";
+        } else if (mode === "name") {
+            adminFilterValueInput.type = "text";
+            adminFilterValueInput.placeholder = "Enter raised by name";
+        } else {
+            adminFilterValueInput.type = "text";
+            adminFilterValueInput.placeholder = "Enter complaint text";
+        }
+        adminFilterValueInput.value = "";
+        applyAdminFilters();
+    }
+
+    async function loadHistory() {
+        try {
+            const res = await fetch("/admin/history?role=admin&limit=120");
+            if (!res.ok) {
+                historyContainer.innerHTML = "<p>Unable to load history.</p>";
+                return;
+            }
+            const rows = await res.json();
+            const historyRows = Array.isArray(rows) ? rows : [];
+            if (historyRows.length === 0) {
+                historyContainer.innerHTML = "<p>No history records yet.</p>";
+                return;
+            }
+
+            historyContainer.innerHTML = "";
+            historyRows.forEach((row) => {
+                const detailsText = row.details ? JSON.stringify(row.details) : "{}";
+                const complaintTimeText =
+                    row.action === "CREATED" && row.details && row.details.createdAt
+                        ? `<div class="history-meta">Complaint Time: ${formatDateTime(row.details.createdAt)}</div>`
+                        : "";
+                const item = document.createElement("div");
+                item.className = "history-item";
+                item.innerHTML = `
+                    <div><b>${row.action}</b> ${row.ticket_id ? `(Ticket #${row.ticket_id})` : ""}</div>
+                    <div class="history-meta">${formatDateTime(row.createdAt)} | By: ${row.actor_name || row.actor_role}</div>
+                    ${complaintTimeText}
+                    <div class="history-meta">${detailsText}</div>
+                `;
+                historyContainer.appendChild(item);
+            });
+        } catch (_) {
+            historyContainer.innerHTML = "<p>Unable to load history.</p>";
+        }
+    }
+
+    async function backupHistory() {
+        const backupDir = (backupDirInput.value || "").trim();
+        if (!backupDir) {
+            showToast("Set backup storage location in Settings");
+            return;
+        }
+
+        backupHistoryBtn.disabled = true;
+        backupHistoryBtn.textContent = "Backing up...";
+        try {
+            const res = await fetch("/admin/history/backup", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ role: "admin", backupDir }),
+            });
+            const data = await res.json().catch(() => ({}));
+            if (!res.ok) {
+                showToast(data.error || "Unable to backup history");
+                return;
+            }
+            lastBackupDir = backupDir;
+            backupDirInput.value = lastBackupDir;
+            localStorage.setItem(backupDirKey, lastBackupDir);
+            historyStatus.textContent = `Backup created: ${data.filename} (${data.total} records) at ${data.backupDir}`;
+            showToast("History backup created");
+        } catch (_) {
+            showToast("Unable to backup history");
+        } finally {
+            backupHistoryBtn.disabled = false;
+            backupHistoryBtn.textContent = "Backup History";
+        }
+    }
+
+    async function clearHistory() {
+        const confirmed = window.confirm("Clear all complaint history? This cannot be undone.");
+        if (!confirmed) return;
+
+        clearHistoryBtn.disabled = true;
+        clearHistoryBtn.textContent = "Clearing...";
+        try {
+            const res = await fetch("/admin/history", {
+                method: "DELETE",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ role: "admin" }),
+            });
+            const data = await res.json().catch(() => ({}));
+            if (!res.ok) {
+                showToast(data.error || "Unable to clear history");
+                return;
+            }
+            historyStatus.textContent = `History cleared (${data.deleted || 0} records removed).`;
+            showToast("History cleared");
+            await loadHistory();
+            await loadStorage();
+        } catch (_) {
+            showToast("Unable to clear history");
+        } finally {
+            clearHistoryBtn.disabled = false;
+            clearHistoryBtn.textContent = "Clear History";
+        }
+    }
+
+    async function loadStorage() {
+        try {
+            const res = await fetch("/admin/storage?role=admin");
+            if (!res.ok) {
+                storageContainer.innerHTML = "<p>Unable to load storage info.</p>";
+                return;
+            }
+            const data = await res.json();
+            storageContainer.innerHTML = `
+                <p><b>Database Size:</b> ${Number(data.dbSizeBytes || 0).toLocaleString()} bytes</p>
+                <p><b>Total Complaints:</b> ${Number(data.totalTickets || 0).toLocaleString()}</p>
+                <p><b>Total History Records:</b> ${Number(data.totalHistory || 0).toLocaleString()}</p>
+                <p><b>Oldest History:</b> ${formatDateTime(data.oldestHistory)}</p>
+                <p><b>Latest History:</b> ${formatDateTime(data.latestHistory)}</p>
+            `;
+        } catch (_) {
+            storageContainer.innerHTML = "<p>Unable to load storage info.</p>";
+        }
+    }
+
+    async function loadStats() {
+        try {
+            const res = await fetch("/admin/stats?role=admin");
+            if (!res.ok) return;
+            const data = await res.json();
+            totalEl.textContent = String(data.total || 0);
+            openEl.textContent = String(data.open || 0);
+            progressEl.textContent = String(data.progress || 0);
+            closedEl.textContent = String(data.closed || 0);
+        } catch (_) {}
+    }
+
+    async function adminUpdate(id, status, comment) {
+        const res = await fetch(`/tickets/${id}/admin-update`, {
+            method: "PUT",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ status, comment, role: "admin" })
+        });
+        if (!res.ok) {
+            const data = await res.json().catch(() => ({}));
+            showToast(data.error || "Unable to update ticket");
+            return;
+        }
+        await loadTickets(false);
+        await loadStats();
+    }
+
+    async function loadTickets(showNewTicketAlerts) {
+        try {
+            const res = await fetch("/tickets?role=admin");
+            if (!res.ok) return;
+            const payload = await res.json();
+            const tickets = Array.isArray(payload) ? payload : [];
+
+            const currentIds = new Set(tickets.map((t) => t.id));
+            if (showNewTicketAlerts && firstLoadComplete) {
+                const newTickets = tickets.filter((t) => !knownTicketIds.has(t.id));
+                newTickets.reverse().forEach((t) => {
+                    showToast(`New complaint raised: ${t.title}`);
+                    pushNotification(`New complaint raised: ${t.title}`);
+                });
+            }
+
+            knownTicketIds = currentIds;
+            firstLoadComplete = true;
+            allTickets = tickets;
+            applyAdminFilters();
+        } catch (_) {}
+    }
+
+    createUserBtn.addEventListener("click", createUser);
+    newPasswordInput.addEventListener("keydown", (event) => {
+        if (event.key === "Enter") {
+            createUser();
+        }
+    });
+
+    saveSettingsBtn.addEventListener("click", () => {
+        const value = Number(pollSecondsInput.value);
+        if (!Number.isFinite(value) || value < 3 || value > 60) {
+            showToast("Refresh interval must be between 3 and 60 seconds");
+            return;
+        }
+        const selectedBackupDir = (backupDirInput.value || "").trim();
+        if (!selectedBackupDir) {
+            showToast("Backup storage location is required");
+            return;
+        }
+        pollSeconds = value;
+        lastBackupDir = selectedBackupDir;
+        localStorage.setItem("admin_poll_seconds", String(pollSeconds));
+        localStorage.setItem(backupDirKey, lastBackupDir);
+        startPolling();
+        showToast("Settings saved");
+    });
+    backupHistoryBtn.addEventListener("click", backupHistory);
+    clearHistoryBtn.addEventListener("click", clearHistory);
+    [adminSearchInput, adminFilterValueInput].forEach((el) => {
+        el.addEventListener("input", applyAdminFilters);
+    });
+    adminFilterTypeInput.addEventListener("change", syncAdminFilterInputMode);
+    clearAdminFiltersBtn.addEventListener("click", () => {
+        adminSearchInput.value = "";
+        adminFilterTypeInput.value = "date";
+        syncAdminFilterInputMode();
+        adminFilterValueInput.value = "";
+        applyAdminFilters();
+    });
+    adminChatSendBtn.addEventListener("click", sendAdminChatMessage);
+    adminChatInput.addEventListener("keydown", (event) => {
+        if (event.key === "Enter") {
+            sendAdminChatMessage();
+        }
+    });
+    adminChatBackBtn.addEventListener("click", () => {
+        selectedChatUserId = 0;
+        adminChatMessages.innerHTML = "<div class=\"chat-user-meta\">Select a user to start chat</div>";
+        renderAdminChatUsers();
+    });
+    syncAdminFilterInputMode();
+
+    function startPolling() {
+        if (pollTimer) {
+            clearInterval(pollTimer);
+        }
+        pollTimer = setInterval(() => {
+            loadStats();
+            loadTickets(true);
+        }, pollSeconds * 1000);
+    }
+
+    function startChatPolling() {
+        if (chatPollTimer) {
+            clearInterval(chatPollTimer);
+        }
+        chatPollTimer = setInterval(async () => {
+            await loadAdminChatUsers(true);
+            await loadAdminChatMessages(false);
+        }, 4000);
+    }
+
+    loadStats();
+    loadTickets(false);
+    startPolling();
+    loadAdminChatUsers(false).then(() => loadAdminChatMessages(true));
+    startChatPolling();
+});
+
+function formatDateParts(isoValue) {
+    if (!isoValue) return { date: "-", time: "-" };
+    const date = new Date(isoValue);
+    if (Number.isNaN(date.getTime())) return { date: String(isoValue), time: "-" };
+    return {
+        date: date.toLocaleDateString(),
+        time: date.toLocaleTimeString()
+    };
+}
+</script>
+</body>
+</html>

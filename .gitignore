@@ -1,0 +1,26 @@
+# Dependencies
+node_modules/
+
+# Build output
+dist/
+
+# Visual Studio
+.vs/
+.vscode/
+
+# Database
+tickets.db
+*.sqbpro
+
+# Backups
+backups/
+
+# Installers
+*.exe
+*.dmg
+
+# Environment
+.env
+
+# Logs
+*.log

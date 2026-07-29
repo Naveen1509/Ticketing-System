@@ -1,0 +1,51 @@
+{
+  "name": "ticket-system",
+  "version": "1.0.0",
+  "description": "IT ticket system",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "server": "node Server.js",
+    "pack": "electron-builder --dir",
+    "dist": "electron-builder --win"
+  },
+  "keywords": [],
+  "author": "Company",
+  "license": "ISC",
+  "type": "commonjs",
+  "dependencies": {
+    "express": "^5.2.1",
+    "sqlite3": "^6.0.1"
+  },
+  "devDependencies": {
+    "electron": "^26.6.10",
+    "electron-builder": "^23.6.0"
+  },
+  "build": {
+    "appId": "com.company.ticketsystem",
+    "productName": "TicketSystem",
+    "asar": true,
+    "npmRebuild": false,
+    "directories": {
+      "buildResources": "installer",
+      "output": "dist"
+    },
+    "files": [
+      "**/*",
+      "!dist/*",
+      "!installer/*",
+      "!.vs/*",
+      "!backups/*"
+    ],
+    "win": {
+      "target": "nsis",
+      "icon": "Images/icon.ico"
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true
+    }
+  }
+}
